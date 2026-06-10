@@ -1,0 +1,7 @@
+../Core/Src/LSM_6DS3.c:39:13:LSM6DS3_WriteReg	32	static
+../Core/Src/LSM_6DS3.c:51:16:LSM6DS3_ReadReg	40	static
+../Core/Src/LSM_6DS3.c:70:6:LSM6DS3_Init	8	static
+../Core/Src/LSM_6DS3.c:93:6:LSM6DS3_WHOAMI	80	static
+../Core/Src/LSM_6DS3.c:115:6:imu_read_accel_xyz	48	static
+../Core/Src/LSM_6DS3.c:143:13:imu_update_gravity	16	static
+../Core/Src/LSM_6DS3.c:172:9:imu_vertical_shock	48	static
