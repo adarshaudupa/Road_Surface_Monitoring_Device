@@ -42,6 +42,12 @@
 #define SHOCK_EVENT_THRESHOLD    4000
 #define SHOCK_WARNING_THRESHOLD  1000
 
+#define BASELINE_DISTANCE_CM        15
+#define POTHOLE_DISTANCE_CM         17
+#define ROUGH_ROAD_THRESHOLD        250
+#define POTHOLE_SHOCK_THRESHOLD     550
+#define POTHOLE_CONFIRM_COUNT       2
+
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -192,7 +198,7 @@ int main(void)
 	  }
 
 	  /* =========================================
-	     DETERMINISTIC IMU SAMPLING
+	     DETERMINISTIC IMU + ULTRASONIC DETECTION
 	     =========================================*/
 
 	  if(HAL_GetTick() - last_imu_sample >= IMU_SAMPLE_PERIOD_MS)
@@ -209,26 +215,68 @@ int main(void)
 	          shock_abs = -shock_abs;
 	      }
 
-	      /* =====================================
-	         EVENT DETECTION
-	         =====================================*/
-	      if((shock_abs >= SHOCK_EVENT_THRESHOLD) &&
-	    		  ((HAL_GetTick() - last_event_time) > EVENT_COOLDOWN_MS))
+	      /* clamp unstable spikes */
+	      if(shock_abs > 3000)
 	      {
-	    	  road_event = 1;
-	          last_event_time = HAL_GetTick();
-	          sprintf(msg,
-	                  "[EVENT] POTHOLE | SHOCK:%d | DIST:%u cm\r\n",
-	                  shock_value,
-	                  HCSR04_GetDistance());
-
-	          HAL_UART_Transmit(&huart2,
-	                            (uint8_t*)msg,
-	                            strlen(msg),
-	                            100);
+	          shock_abs = 3000;
 	      }
 
-	      else if(shock_abs >= SHOCK_WARNING_THRESHOLD)
+	      /* =====================================
+	         ULTRASONIC FILTERING
+	         =====================================*/
+
+	      uint32_t d1 = HCSR04_GetDistance();
+
+	      HAL_Delay(5);
+
+	      uint32_t d2 = HCSR04_GetDistance();
+
+	      HAL_Delay(5);
+
+	      uint32_t d3 = HCSR04_GetDistance();
+
+	      uint32_t distance_avg = (d1 + d2 + d3) / 3;
+
+	      /* =====================================
+	         POTHOLE CONFIRMATION
+	         =====================================*/
+
+	      static uint8_t pothole_confirm_count = 0;
+
+	      if((shock_abs >= 550) &&
+	         (distance_avg >= 17))
+	      {
+	          pothole_confirm_count++;
+
+	          if((pothole_confirm_count >= 2) &&
+	             ((HAL_GetTick() - last_event_time) > EVENT_COOLDOWN_MS))
+	          {
+	              last_event_time = HAL_GetTick();
+
+	              pothole_confirm_count = 0;
+
+	              sprintf(msg,
+	                      "[EVENT] POTHOLE | SHOCK:%d | DIST:%lu cm\r\n",
+	                      shock_value,
+	                      distance_avg);
+
+	              HAL_UART_Transmit(&huart2,
+	                                (uint8_t*)msg,
+	                                strlen(msg),
+	                                100);
+	          }
+	      }
+	      else
+	      {
+	          pothole_confirm_count = 0;
+	      }
+
+	      /* =====================================
+	         ROUGH ROAD
+	         =====================================*/
+
+	      if((shock_abs >= 250) &&
+	         (shock_abs < 550))
 	      {
 	          sprintf(msg,
 	                  "[ROAD] ROUGH | SHOCK:%d\r\n",
@@ -240,10 +288,12 @@ int main(void)
 	                            100);
 	      }
 
-	      else
-	      {
-	          /* low-rate normal telemetry */
+	      /* =====================================
+	         NORMAL ROAD
+	         =====================================*/
 
+	      else if(shock_abs < 250)
+	      {
 	          static uint32_t last_normal = 0;
 
 	          if(HAL_GetTick() - last_normal >= 2000)
@@ -251,8 +301,9 @@ int main(void)
 	              last_normal = HAL_GetTick();
 
 	              sprintf(msg,
-	                      "[ROAD] NORMAL | SHOCK:%d\r\n",
-	                      shock_value);
+	                      "[ROAD] NORMAL | SHOCK:%d | DIST:%lu cm\r\n",
+	                      shock_value,
+	                      distance_avg);
 
 	              HAL_UART_Transmit(&huart2,
 	                                (uint8_t*)msg,
