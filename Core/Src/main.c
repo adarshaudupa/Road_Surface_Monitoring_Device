@@ -36,6 +36,11 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+#define IMU_SAMPLE_PERIOD_MS     20
+#define EVENT_COOLDOWN_MS        1500
+
+#define SHOCK_EVENT_THRESHOLD    4000
+#define SHOCK_WARNING_THRESHOLD  1000
 
 /* USER CODE END PD */
 
@@ -57,7 +62,12 @@ GPS_Data_t myGpsData;
 char msg[128];
 uint32_t last_trigger = 0;
 int16_t shock_value;
+
 uint32_t last_imu = 0;
+uint8_t road_event = 0;
+
+uint32_t last_imu_sample = 0;
+uint32_t last_event_time = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -181,28 +191,77 @@ int main(void)
 		  HCSR04_ClearDone();
 	  }
 
-	  /* =========================
-	     IMU TELEMETRY
-	     Every 100ms
-	     =========================*/
+	  /* =========================================
+	     DETERMINISTIC IMU SAMPLING
+	     =========================================*/
 
-	  if(HAL_GetTick() - last_imu >= 100)
+	  if(HAL_GetTick() - last_imu_sample >= IMU_SAMPLE_PERIOD_MS)
 	  {
-	      last_imu = HAL_GetTick();
+	      last_imu_sample = HAL_GetTick();
 
 	      shock_value = imu_vertical_shock();
 
-	      sprintf(msg,
-	              "[IMU] Vertical Shock: %d\r\n",
-	              shock_value);
+	      /* absolute magnitude */
+	      int16_t shock_abs = shock_value;
 
-	      HAL_UART_Transmit(&huart2,
-	                        (uint8_t*)msg,
-	                        strlen(msg),
-	                        100);
+	      if(shock_abs < 0)
+	      {
+	          shock_abs = -shock_abs;
+	      }
+
+	      /* =====================================
+	         EVENT DETECTION
+	         =====================================*/
+	      if((shock_abs >= SHOCK_EVENT_THRESHOLD) &&
+	    		  ((HAL_GetTick() - last_event_time) > EVENT_COOLDOWN_MS))
+	      {
+	    	  road_event = 1;
+	          last_event_time = HAL_GetTick();
+	          sprintf(msg,
+	                  "[EVENT] POTHOLE | SHOCK:%d | DIST:%u cm\r\n",
+	                  shock_value,
+	                  HCSR04_GetDistance());
+
+	          HAL_UART_Transmit(&huart2,
+	                            (uint8_t*)msg,
+	                            strlen(msg),
+	                            100);
+	      }
+
+	      else if(shock_abs >= SHOCK_WARNING_THRESHOLD)
+	      {
+	          sprintf(msg,
+	                  "[ROAD] ROUGH | SHOCK:%d\r\n",
+	                  shock_value);
+
+	          HAL_UART_Transmit(&huart2,
+	                            (uint8_t*)msg,
+	                            strlen(msg),
+	                            100);
+	      }
+
+	      else
+	      {
+	          /* low-rate normal telemetry */
+
+	          static uint32_t last_normal = 0;
+
+	          if(HAL_GetTick() - last_normal >= 2000)
+	          {
+	              last_normal = HAL_GetTick();
+
+	              sprintf(msg,
+	                      "[ROAD] NORMAL | SHOCK:%d\r\n",
+	                      shock_value);
+
+	              HAL_UART_Transmit(&huart2,
+	                                (uint8_t*)msg,
+	                                strlen(msg),
+	                                100);
+	          }
+	      }
 	  }
 
-	  HAL_Delay(1000);
   }
   /* USER CODE END 3 */
 }
