@@ -1,3 +1,4 @@
+"./Core/Src/ESP32.o"
 "./Core/Src/HC_SR04.o"
 "./Core/Src/LSM_6DS3.o"
 "./Core/Src/NEO_6M.o"

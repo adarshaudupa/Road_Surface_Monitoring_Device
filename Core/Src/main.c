@@ -24,6 +24,7 @@
 #include "NEO_6M.h"
 #include "HC_SR04.h"
 #include "LSM6DS3.h"
+#include "ESP32.h"
 #include "string.h"
 #include <stdio.h>
 
@@ -39,13 +40,11 @@
 #define IMU_SAMPLE_PERIOD_MS     20
 #define EVENT_COOLDOWN_MS        1500
 
-#define SHOCK_EVENT_THRESHOLD    4000
-#define SHOCK_WARNING_THRESHOLD  1000
-
 #define BASELINE_DISTANCE_CM        15
-#define POTHOLE_DISTANCE_CM         17
-#define ROUGH_ROAD_THRESHOLD        250
-#define POTHOLE_SHOCK_THRESHOLD     550
+#define POTHOLE_DISTANCE_CM         16
+
+#define ROUGH_ROAD_THRESHOLD        400
+#define POTHOLE_SHOCK_THRESHOLD     600
 #define POTHOLE_CONFIRM_COUNT       2
 
 /* USER CODE END PD */
@@ -62,15 +61,13 @@ TIM_HandleTypeDef htim5;
 
 UART_HandleTypeDef huart1;
 UART_HandleTypeDef huart2;
+UART_HandleTypeDef huart3;
 
 /* USER CODE BEGIN PV */
 GPS_Data_t myGpsData;
 char msg[128];
 uint32_t last_trigger = 0;
 int16_t shock_value;
-
-uint32_t last_imu = 0;
-uint8_t road_event = 0;
 
 uint32_t last_imu_sample = 0;
 uint32_t last_event_time = 0;
@@ -86,6 +83,7 @@ static void MX_USART1_UART_Init(void);
 static void MX_USART2_UART_Init(void);
 static void MX_TIM5_Init(void);
 static void MX_I2C1_Init(void);
+static void MX_USART3_UART_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -128,6 +126,7 @@ int main(void)
   MX_USART2_UART_Init();
   MX_TIM5_Init();
   MX_I2C1_Init();
+  MX_USART3_UART_Init();
   /* USER CODE BEGIN 2 */
   GPS_Init(&huart1);
   HCSR04_Init();
@@ -139,6 +138,13 @@ int main(void)
   LSM6DS3_Init();
 
   LSM6DS3_WHOAMI();
+
+  ESP32_Init(&huart3);
+
+  HAL_UART_Transmit(&huart3,
+                    (uint8_t*)"STM32_UART3_OK\n",
+                    16,
+                    100);
 
   /* USER CODE END 2 */
 
@@ -191,14 +197,6 @@ int main(void)
 
 	  if(HCSR04_IsDone())
 	  {
-		  sprintf(msg,
-				  "[HCSR04] Distance: %u cm\r\n",
-				  HCSR04_GetDistance());
-
-		  HAL_UART_Transmit(&huart2,
-				  (uint8_t*)msg,
-				  strlen(msg),
-				  100);
 		  HCSR04_ClearDone();
 	  }
 
@@ -230,17 +228,12 @@ int main(void)
 	         ULTRASONIC FILTERING
 	         =====================================*/
 
-	      uint32_t d1 = HCSR04_GetDistance();
+	      uint32_t distance_avg = HCSR04_GetDistance();
 
-	      HAL_Delay(5);
-
-	      uint32_t d2 = HCSR04_GetDistance();
-
-	      HAL_Delay(5);
-
-	      uint32_t d3 = HCSR04_GetDistance();
-
-	      uint32_t distance_avg = (d1 + d2 + d3) / 3;
+	      if(distance_avg < 5 || distance_avg > 25)
+	      {
+	          distance_avg = BASELINE_DISTANCE_CM;
+	      }
 
 	      /* =====================================
 	         POTHOLE CONFIRMATION
@@ -248,12 +241,12 @@ int main(void)
 
 	      static uint8_t pothole_confirm_count = 0;
 
-	      if((shock_abs >= 550) &&
-	         (distance_avg >= 17))
+	      if((shock_abs >= POTHOLE_SHOCK_THRESHOLD) &&
+	         (distance_avg >= POTHOLE_DISTANCE_CM))
 	      {
 	          pothole_confirm_count++;
 
-	          if((pothole_confirm_count >= 2) &&
+	          if((pothole_confirm_count >= POTHOLE_CONFIRM_COUNT) &&
 	             ((HAL_GetTick() - last_event_time) > EVENT_COOLDOWN_MS))
 	          {
 	              last_event_time = HAL_GetTick();
@@ -271,6 +264,12 @@ int main(void)
 	                                (uint8_t*)msg,
 	                                strlen(msg),
 	                                100);
+
+	              ESP32_Send_Pothole(shock_value,
+	                                 distance_avg,
+	                                 last_lat,
+	                                 last_lon,
+	                                 HAL_GetTick());
 	          }
 	      }
 	      else
@@ -282,8 +281,8 @@ int main(void)
 	         ROUGH ROAD
 	         =====================================*/
 
-	      if((shock_abs >= 250) &&
-	         (shock_abs < 550))
+	      if((shock_abs >= ROUGH_ROAD_THRESHOLD) &&
+	         (shock_abs < POTHOLE_SHOCK_THRESHOLD))
 	      {
 	          sprintf(msg,
 	                  "[ROAD] ROUGH | SHOCK:%d\r\n",
@@ -293,13 +292,25 @@ int main(void)
 	                            (uint8_t*)msg,
 	                            strlen(msg),
 	                            100);
+
+	          static uint32_t last_rough_send = 0;
+
+	          if(HAL_GetTick() - last_rough_send >= 2000)
+	          {
+	              last_rough_send = HAL_GetTick();
+
+	              ESP32_Send_RoughRoad(shock_value,
+	                                   last_lat,
+	                                   last_lon,
+	                                   HAL_GetTick());
+	          }
 	      }
 
 	      /* =====================================
 	         NORMAL ROAD
 	         =====================================*/
 
-	      else if(shock_abs < 250)
+	      else if(shock_abs < ROUGH_ROAD_THRESHOLD)
 	      {
 	          static uint32_t last_normal = 0;
 
@@ -524,6 +535,39 @@ static void MX_USART2_UART_Init(void)
 }
 
 /**
+  * @brief USART3 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_USART3_UART_Init(void)
+{
+
+  /* USER CODE BEGIN USART3_Init 0 */
+
+  /* USER CODE END USART3_Init 0 */
+
+  /* USER CODE BEGIN USART3_Init 1 */
+
+  /* USER CODE END USART3_Init 1 */
+  huart3.Instance = USART3;
+  huart3.Init.BaudRate = 115200;
+  huart3.Init.WordLength = UART_WORDLENGTH_8B;
+  huart3.Init.StopBits = UART_STOPBITS_1;
+  huart3.Init.Parity = UART_PARITY_NONE;
+  huart3.Init.Mode = UART_MODE_TX_RX;
+  huart3.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart3.Init.OverSampling = UART_OVERSAMPLING_16;
+  if (HAL_UART_Init(&huart3) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN USART3_Init 2 */
+
+  /* USER CODE END USART3_Init 2 */
+
+}
+
+/**
   * @brief GPIO Initialization Function
   * @param None
   * @retval None
@@ -557,6 +601,17 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
+{
+    if(huart->Instance == USART1)
+    {
+        /* Forcefully clear the Overrun Error flag */
+        __HAL_UART_CLEAR_OREFLAG(huart);
+
+        /* Restart the GPS listening interrupt using your existing function */
+        GPS_Init(huart);
+    }
+}
 
 /* USER CODE END 4 */
 
