@@ -21,7 +21,7 @@ Road events are detected locally on the STM32, enriched with GPS location data, 
 
 # Team
 
-## Adarsh Audupa
+## [Adarsh Udupa] (https://github.com/adarshaudupa)
 ### Firmware Lead & Embedded Integration
 
 Responsible for:
@@ -40,7 +40,7 @@ Responsible for:
 
 ---
 
-## Sumed Sreedhar
+## [Sumed Sreedhar] (https://github.com/Sumed-Sreedhar)
 ### GPS Systems & Telemetry Architecture
 
 Responsible for:
@@ -60,7 +60,7 @@ Responsible for:
 
 ---
 
-## Tanmay Hutt
+## Tanmay Tiwari (https://github.com/tanmayhutt)
 ### Backend & IoT Infrastructure
 
 Responsible for:
@@ -76,7 +76,7 @@ Responsible for:
 
 ---
 
-## Pratham
+## Pratham Banda 
 ### Mechanical Design & Hardware Integration
 
 Responsible for:
