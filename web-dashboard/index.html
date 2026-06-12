@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Road Surface Monitor</title>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin=""
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app">
+      <header class="topbar">
+        <div class="brand">
+          <div class="brand-mark">RS</div>
+          <div>
+            <div class="brand-title">Road Surface Monitor</div>
+            <div class="brand-subtitle">Potholes and bumps mapped in real time</div>
+          </div>
+        </div>
+        <div class="header-right">
+          <div class="controls">
+            <label class="control">
+              Event
+              <select id="eventFilter">
+                <option value="all">All</option>
+                <option value="pothole">Pothole</option>
+                <option value="speed_bump">Speed Bump</option>
+                <option value="rough_patch">Rough Patch</option>
+              </select>
+            </label>
+            <label class="control">
+              Min reports
+              <input id="minReports" type="number" min="1" value="1" />
+            </label>
+            <button id="resetView" class="secondary">Reset view</button>
+            <button id="toggleLocation" class="secondary">Enable location</button>
+          </div>
+          <div class="status-area">
+            <span id="feedStatus" class="status-pill pending">Waiting for data</span>
+            <span id="deviceStatus" class="status-pill pending">Device: idle</span>
+            <span id="locationStatus" class="status-pill pending">Location: off</span>
+            <button id="refreshNow" class="secondary">Refresh</button>
+          </div>
+        </div>
+      </header>
+
+      <main class="content">
+        <section class="map" id="map"></section>
+        <aside class="panel">
+          <div class="panel-header">
+            <h2>Detections</h2>
+            <div id="summary" class="summary"></div>
+          </div>
+          <div id="list" class="list"></div>
+        </aside>
+      </main>
+    </div>
+
+    <script
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+      crossorigin=""
+    ></script>
+    <script src="app.js"></script>
+  </body>
+</html>

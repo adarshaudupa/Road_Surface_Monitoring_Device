@@ -1,0 +1,14 @@
+# Environment Variables & Secrets (CRITICAL)
+.env
+*.env
+
+# Python / Backend Artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual Environments
+venv/
+.venv/
+env/
+ENV/
