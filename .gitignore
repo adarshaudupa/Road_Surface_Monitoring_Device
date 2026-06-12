@@ -1,4 +1,11 @@
 # ==========================================
+# macOS System Files
+# ==========================================
+.DS_Store
+.DS_Store?
+._*
+
+# ==========================================
 # Environment Variables & Secrets (CRITICAL)
 # ==========================================
 .env
@@ -13,7 +20,6 @@ __pycache__/
 *$py.class
 venv/
 .venv/
-env/
 
 # ==========================================
 # STM32 Firmware (firmware-stm32-hal)
@@ -27,6 +33,7 @@ firmware-stm32-hal/.settings/
 *.d
 *.elf
 *.hex
+*.bin
 *.list
 *.map
 *.mk
@@ -36,12 +43,3 @@ makefile
 # ESP32 Firmware (firmware-esp32)
 # ==========================================
 firmware-esp32/build/
-*.bin
-
-# ==========================================
-# System & OS Files
-# ==========================================
-.DS_Store
-.DS_Store?
-._*
-Thumbs.db
