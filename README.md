@@ -84,7 +84,7 @@ Responsible for:
 - RC vehicle design
 - AutoCAD chassis modelling
 - Sensor mounting design
-- Motor driver integration
+- TB6612FNG Motor driver integration
 - Vehicle wiring and assembly
 - Power distribution setup
 - Hardware packaging
