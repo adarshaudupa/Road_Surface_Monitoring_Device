@@ -1,0 +1,31 @@
+# ==========================================
+# Toolchain & Build Artifacts (Safe to Ignore)
+# ==========================================
+# Ignore the entire compiled binaries folder
+Debug/
+Release/
+
+# Compiled object and raw binaries (in case they end up elsewhere)
+*.o
+*.su
+*.cyclo
+*.d
+*.elf
+*.bin
+*.hex
+
+# Automated Toolchain Build Manifests
+makefile
+*.list
+*.mk
+
+# ==========================================
+# Local IDE Configurations (Safe to Ignore)
+# ==========================================
+.settings/
+
+# ==========================================
+# Keep everything else!
+# ==========================================
+# This ensures Drivers/, Core/, .project, .cproject,
+# and Road_Surface_Monitor.ioc are perfectly preserved.

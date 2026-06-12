@@ -1,0 +1,52 @@
+# ==========================================
+# Environment Variables & Secrets (CRITICAL)
+# ==========================================
+# Never commit your database credentials, tokens, or local keys
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.env
+
+# ==========================================
+# Node.js / Frontend Artifacts
+# ==========================================
+# Dependencies (regenerated via 'npm install')
+node_modules/
+/jspm_packages/
+
+# Production build outputs
+dist/
+build/
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ==========================================
+# Python / Backend Artifacts
+# ==========================================
+# Byte-compiled / optimized modules
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual Environments (regenerated via pipenv/venv)
+.venv/
+venv/
+ENV/
+env/
+
+# ==========================================
+# System & IDE Files
+# ==========================================
+# macOS specific hidden file
+.DS_Store
+
+# Windows specific thumbnail cache
+Thumbs.db
+
+# VS Code workspace configurations (optional, safe to ignore)
+.vscode/

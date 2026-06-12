@@ -1,6 +1,0 @@
-../Core/Src/HC_SR04.c:27:6:HCSR04_Init	1
-../Core/Src/HC_SR04.c:32:6:HCSR04_Start	3
-../Core/Src/HC_SR04.c:68:6:HCSR04_TIM_IC_CaptureCallback	5
-../Core/Src/HC_SR04.c:131:9:HCSR04_IsDone	1
-../Core/Src/HC_SR04.c:136:10:HCSR04_GetDistance	1
-../Core/Src/HC_SR04.c:141:6:HCSR04_ClearDone	1
