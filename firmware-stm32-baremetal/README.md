@@ -6,7 +6,7 @@ STM32F446RE bare-metal firmware for the road surface monitoring system.
 
 &#x20; and UART links to GPS (NEO-6M) and ESP32-S3.
 
-\- Non-blocking sensor fusion loop running at 100 Hz.
+\- Non blocking sensor fusion loop running at 100 Hz.
 
 \- Built with STM32CubeIDE targeting Nucleo-F446RE.
 
