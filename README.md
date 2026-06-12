@@ -60,7 +60,7 @@ Responsible for:
 
 ---
 
-## Tanmay Tiwari(https://github.com/tanmayhutt)
+## [Tanmay Tiwari](https://github.com/tanmayhutt)
 ### Backend & IoT Infrastructure
 
 Responsible for:
