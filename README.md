@@ -121,7 +121,7 @@ Data flows from raw sensor readings all the way to a browser-rendered map in und
 
 ---
 
-## 🔧 Hardware Platform
+##  Hardware Platform
 
 <!--
   ╔══════════════════════════════════════════════════════════════╗
