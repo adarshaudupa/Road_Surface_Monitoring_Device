@@ -173,9 +173,9 @@ Data flows from raw sensor readings all the way to a browser-rendered map in und
 
 ---
 
-## 📡 Sensor Subsystems
+##  Sensor Subsystems
 
-### 🧲 LSM6DS3 — IMU Shock Detection
+###  LSM6DS3 — IMU Shock Detection
 
 The accelerometer continuously monitors vehicle dynamics. A **low-pass gravity estimation** filter runs every sample to cleanly isolate vertical shock from static gravity:
 
@@ -425,7 +425,7 @@ road-condition-monitoring-system/
 
 ---
 
-## 🚀 Getting Started
+##  Getting Started
 
 ### Prerequisites
 
@@ -489,7 +489,7 @@ python server.py
 
 ---
 
-## 👥 Team
+##  Team
 
 <table>
   <tr>
@@ -592,15 +592,15 @@ python server.py
 
 | Enhancement | Description |
 |---|---|
-| 📐 **Coordinate Precision** | GPS decimal-degree conversion & HDOP-based accuracy filtering |
-| 💾 **Local Logging** | SD card buffering for offline operation in GPS/Wi-Fi dead zones |
-| 🧠 **Adaptive Thresholds** | Self-calibrating event detection that learns road baseline per session |
-| 📉 **Kalman Filtering** | Optimal sensor fusion for improved vertical shock estimation |
-| 🤖 **ML Classification** | On-device or edge neural network for road condition categorization |
-| ☁️ **Cloud Analytics** | Historical data aggregation, heatmaps & trend dashboards |
-| 📱 **Mobile Companion App** | Real-time monitoring + RC control in a single mobile app |
-| 📶 **V2X Integration** | Vehicle-to-infrastructure telemetry broadcast protocol |
-| 🗺️ **Crowdsourced Mapping** | Multi-device deployment feeding a shared city-wide road quality map |
+|  **Coordinate Precision** | GPS decimal-degree conversion & HDOP-based accuracy filtering |
+|  **Local Logging** | SD card buffering for offline operation in GPS/Wi-Fi dead zones |
+|  **Adaptive Thresholds** | Self-calibrating event detection that learns road baseline per session |
+|  **Kalman Filtering** | Optimal sensor fusion for improved vertical shock estimation |
+|  **ML Classification** | On-device or edge neural network for road condition categorization |
+|  **Cloud Analytics** | Historical data aggregation, heatmaps & trend dashboards |
+|  **Mobile Companion App** | Real-time monitoring + RC control in a single mobile app |
+|  **V2X Integration** | Vehicle-to-infrastructure telemetry broadcast protocol |
+|  **Crowdsourced Mapping** | Multi-device deployment feeding a shared city-wide road quality map |
 
 ---
 
