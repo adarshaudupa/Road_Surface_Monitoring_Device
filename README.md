@@ -2,10 +2,10 @@
 
 <!--
   ╔══════════════════════════════════════════════════════════════╗
-  ║  IMAGE 1 — BANNER                                           ║
-  ║  File: docs/images/banner.png                               ║
-  ║  Suggested size: 1280 × 400 px                              ║
-  ║  Use Canva / Figma to make a dark-themed banner with the    ║
+  ║  IMAGE 1 — BANNER                                            ║
+  ║  File: docs/images/banner.png                                ║
+  ║  Suggested size: 1280 × 400 px                               ║
+  ║  Use Canva / Figma to make a dark-themed banner with the     ║
   ║  project name, a road icon, and your institution name.       ║
   ╚══════════════════════════════════════════════════════════════╝
 -->
