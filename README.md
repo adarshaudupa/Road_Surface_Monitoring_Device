@@ -258,7 +258,7 @@ UART3 RX Interrupt  ──►  Ring Buffer  (producer — ISR context)
               ┌─────────────────┼──────────────────┐
               ▼                 ▼                  ▼
           UTC Time          Lat / Lon           Altitude
-       Fix Quality      Satellite Count
+         Fix Quality     Satellite Count
 ```
 
 <!--
