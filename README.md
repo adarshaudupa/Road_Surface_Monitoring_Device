@@ -11,7 +11,7 @@
 -->
 ![Banner](docs/images/banner.png)
 
-# 🛣️ Road Condition Monitoring System
+#  Road Condition Monitoring System
 
 **A vehicle-mounted embedded sensing platform that autonomously detects road anomalies,
 geo-tags them with real-time GPS, and streams telemetry to a live web dashboard.**
@@ -34,7 +34,7 @@ geo-tags them with real-time GPS, and streams telemetry to a live web dashboard.
 
 ---
 
-## 📋 Table of Contents
+##  Table of Contents
 
 - [Overview](#-overview)
 - [Live Dashboard Preview](#-live-dashboard-preview)
@@ -54,7 +54,7 @@ geo-tags them with real-time GPS, and streams telemetry to a live web dashboard.
 
 ---
 
-## 🎯 Overview
+##  Overview
 
 The **Road Condition Monitoring System** is a complete end-to-end embedded IoT platform that mounts on an RC vehicle and autonomously surveys road surface quality in real time.
 
@@ -64,16 +64,16 @@ The STM32F446RE microcontroller fuses data from an **IMU**, **ultrasonic rangefi
 
 | | Capability |
 |:---:|:---|
-| 🔬 | **Multi-sensor fusion** — IMU shock detection cross-validated with ultrasonic surface profiling |
-| 📡 | **GPS geo-tagging** — NMEA GPGGA parsing with interrupt-driven ring-buffer architecture |
-| 🔗 | **Inter-MCU telemetry** — Structured ASCII packet protocol over STM32 ↔ ESP32 UART link |
-| ☁️ | **Cloud uplink** — HTTP POST pipeline from ESP32 to Python REST API |
-| 📊 | **Live dashboard** — Color-coded map markers with per-event shock & distance metrics |
-| 🚗 | **Vehicle integration** — 3D-printed sensor mounts on a custom RC chassis |
+|  | **Multi-sensor fusion** — IMU shock detection cross-validated with ultrasonic surface profiling |
+|  | **GPS geo-tagging** — NMEA GPGGA parsing with interrupt-driven ring-buffer architecture |
+|  | **Inter-MCU telemetry** — Structured ASCII packet protocol over STM32 ↔ ESP32 UART link |
+|  | **Cloud uplink** — HTTP POST pipeline from ESP32 to Python REST API |
+|  | **Live dashboard** — Color-coded map markers with per-event shock & distance metrics |
+|  | **Vehicle integration** — 3D-printed sensor mounts on a custom RC chassis |
 
 ---
 
-## 🖥️ Live Dashboard Preview
+##  Live Dashboard Preview
 
 <!--
   ╔══════════════════════════════════════════════════════════════╗
@@ -90,7 +90,7 @@ The STM32F446RE microcontroller fuses data from an **IMU**, **ultrasonic rangefi
 
 ---
 
-## 🏗️ System Architecture
+##  System Architecture
 
 <!--
   ╔══════════════════════════════════════════════════════════════╗
@@ -104,17 +104,17 @@ The STM32F446RE microcontroller fuses data from an **IMU**, **ultrasonic rangefi
 ![Architecture Diagram](docs/images/architecture.png)
 
 ```
-  ┌──────────────┐  I²C   ┌───────────────────────────────────────────────────┐
-  │  LSM6DS3 IMU │───────►│                                                   │
-  └──────────────┘        │                                                   │  UART   ┌───────────┐  Wi-Fi   ┌────────────────┐
-                           │            STM32F446RE                            │────────►│  ESP32-S3 │─────────►│ Backend Server │
-  ┌──────────────┐  TIM5  │                                                   │         └───────────┘          └───────┬────────┘
-  │   HC-SR04    │───────►│  • Sensor acquisition & fusion                    │                                         │
-  └──────────────┘        │  • Event classification (pothole / rough road)    │                                         ▼
-                           │  • GPS stream parsing (NMEA GPGGA)               │                                ┌────────────────┐
-  ┌──────────────┐  UART  │  • Telemetry packet generation                   │                                │ Web Dashboard  │
-  │   NEO-6M GPS │───────►│                                                   │                                │  (Leaflet.js)  │
-  └──────────────┘        └───────────────────────────────────────────────────┘                                └────────────────┘
+  ┌──────────────┐  I²C    ┌───────────────────────────────────────────────────┐
+  │  LSM6DS3 IMU │───────► │                                                   │
+  └──────────────┘         │                                                   │  UART    ┌───────────┐  Wi-Fi   ┌────────────────┐
+                           │            STM32F446RE                            │────────► │  ESP32-S3 │─────────►│ Backend Server │
+  ┌──────────────┐  TIM5   │                                                   │          └───────────┘          └───────┬────────┘
+  │   HC-SR04    │───────► │  • Sensor acquisition & fusion                    │                                         │
+  └──────────────┘         │  • Event classification (pothole / rough road)    │                                         ▼
+                           │  • GPS stream parsing (NMEA GPGGA)                │                                 ┌────────────────┐
+  ┌──────────────┐  UART   │  • Telemetry packet generation                    │                                 │ Web Dashboard  │
+  │   NEO-6M GPS │───────► │                                                   │                                 │  (Leaflet.js)  │
+  └──────────────┘         └───────────────────────────────────────────────────┘                                 └────────────────┘
 ```
 
 Data flows from raw sensor readings all the way to a browser-rendered map in under a second.
@@ -125,11 +125,11 @@ Data flows from raw sensor readings all the way to a browser-rendered map in und
 
 <!--
   ╔══════════════════════════════════════════════════════════════╗
-  ║  IMAGE 4 — HARDWARE / RC CAR PHOTO                          ║
-  ║  File: docs/images/hardware.png                             ║
-  ║  Suggested size: 1200 × 800 px                              ║
-  ║  A well-lit photo of the RC car with components labelled.   ║
-  ║  Use Canva or GIMP to add callout labels over the photo.    ║
+  ║  IMAGE 4 — HARDWARE / RC CAR PHOTO                           ║
+  ║  File: docs/images/hardware.png                              ║
+  ║  Suggested size: 1200 × 800 px                               ║
+  ║  A well-lit photo of the RC car with components labelled.    ║
+  ║  Use Canva or GIMP to add callout labels over the photo.     ║
   ╚══════════════════════════════════════════════════════════════╝
 -->
 ![Hardware Platform](docs/images/hardware.png)
@@ -162,9 +162,9 @@ Data flows from raw sensor readings all the way to a browser-rendered map in und
 
 <!--
   ╔══════════════════════════════════════════════════════════════╗
-  ║  IMAGE 5 — WIRING / PINOUT DIAGRAM                          ║
-  ║  File: docs/images/wiring.png                               ║
-  ║  Suggested size: 1200 × 900 px                              ║
+  ║  IMAGE 5 — WIRING / PINOUT DIAGRAM                           ║
+  ║  File: docs/images/wiring.png                                ║
+  ║  Suggested size: 1200 × 900 px                               ║
   ║  Use Fritzing or draw.io to draw the wiring between the      ║
   ║  STM32, ESP32, sensors, and motor driver.                    ║
   ╚══════════════════════════════════════════════════════════════╝
@@ -197,9 +197,9 @@ Raw Accelerometer Output (x, y, z)
 
 <!--
   ╔══════════════════════════════════════════════════════════════╗
-  ║  IMAGE 6 — IMU SIGNAL WAVEFORM                              ║
-  ║  File: docs/images/imu-signal.png                           ║
-  ║  Suggested size: 1200 × 500 px                              ║
+  ║  IMAGE 6 — IMU SIGNAL WAVEFORM                               ║
+  ║  File: docs/images/imu-signal.png                            ║
+  ║  Suggested size: 1200 × 500 px                               ║
   ║  Use Arduino Serial Plotter or Matplotlib to plot the raw    ║
   ║  vs filtered IMU signal with a pothole event highlighted.    ║
   ╚══════════════════════════════════════════════════════════════╝
@@ -220,13 +220,17 @@ STM32 GPIO Trigger ──► 10 μs pulse
                                ▼
                         HC-SR04 emits ultrasonic burst
                                │
+                               ▼
                          Echo Pin HIGH
                                │  ◄─── TIM5 Capture (rising edge)
+                               ▼
                          Echo Pin LOW
                                │  ◄─── TIM5 Capture (falling edge)
                                │
+                               ▼
                     Δt  =  t_fall − t_rise
                                │
+                               ▼
                     Distance  =  (Δt × 343 m/s) / 2
 ```
 
@@ -241,12 +245,16 @@ The GPS module streams **NMEA 0183** sentences continuously. The firmware implem
 ```
 UART3 RX Interrupt  ──►  Ring Buffer  (producer — ISR context)
                                 │
+                                ▼
                        Main Loop polls (consumer)
                                 │
+                                ▼
                      NMEA Sentence Reconstruction
                                 │
+                                ▼
                           GPGGA Parser
                                 │
+                                ▼
               ┌─────────────────┼──────────────────┐
           UTC Time          Lat / Lon           Altitude
        Fix Quality      Satellite Count
@@ -254,9 +262,9 @@ UART3 RX Interrupt  ──►  Ring Buffer  (producer — ISR context)
 
 <!--
   ╔══════════════════════════════════════════════════════════════╗
-  ║  IMAGE 7 — GPS MAP TRACK                                    ║
-  ║  File: docs/images/gps-track.png                            ║
-  ║  Suggested size: 1200 × 700 px                              ║
+  ║  IMAGE 7 — GPS MAP TRACK                                     ║
+  ║  File: docs/images/gps-track.png                             ║
+  ║  Suggested size: 1200 × 700 px                               ║
   ║  Screenshot of the dashboard after a full test run with      ║
   ║  a visible GPS track of the vehicle route plotted on the map ║
   ╚══════════════════════════════════════════════════════════════╝
@@ -345,9 +353,9 @@ Content-Type: application/json
 
 <!--
   ╔══════════════════════════════════════════════════════════════╗
-  ║  IMAGE 8 — DASHBOARD DETAIL / GIF                           ║
-  ║  File: docs/images/dashboard-detail.gif  (or .png)          ║
-  ║  Suggested size: 1280 × 720 px                              ║
+  ║  IMAGE 8 — DASHBOARD DETAIL / GIF                            ║
+  ║  File: docs/images/dashboard-detail.gif  (or .png)           ║
+  ║  Suggested size: 1280 × 720 px                               ║
   ║  Record a short screen capture (GIF via ScreenToGif /        ║
   ║  Kap) showing a new event appearing live on the map.         ║
   ╚══════════════════════════════════════════════════════════════╝
@@ -539,7 +547,7 @@ python server.py
 
 ---
 
-## 🧠 Concepts Demonstrated
+##  Concepts Demonstrated
 
 <details>
 <summary><b>Click to expand the full list</b></summary>
@@ -580,7 +588,7 @@ python server.py
 
 ---
 
-## 🔮 Future Improvements
+##  Future Improvements
 
 | Enhancement | Description |
 |---|---|
@@ -596,27 +604,25 @@ python server.py
 
 ---
 
-## 📌 Current Status
+##  Current Status
 
-> ✅ **Functional prototype** — All subsystems integrated and field-tested.
+>  **Functional prototype** — All subsystems integrated and field-tested.
 
 | Subsystem | Status |
 |---|---|
-| LSM6DS3 IMU shock detection | ✅ Working |
-| HC-SR04 ultrasonic ranging | ✅ Working |
-| NEO-6M GPS acquisition | ✅ Working |
-| STM32 ↔ ESP32 UART telemetry | ✅ Working |
-| ESP32 Wi-Fi HTTP upload | ✅ Working |
-| Python backend REST API | ✅ Working |
-| Leaflet.js map dashboard | ✅ Working |
-| BLE RC vehicle control | ✅ Working |
-| 3D-printed sensor mount | ✅ Designed & printed |
-| Bare-metal reference firmware | ✅ Complete |
+| LSM6DS3 IMU shock detection |  Working |
+| HC-SR04 ultrasonic ranging |  Working |
+| NEO-6M GPS acquisition |  Working |
+| STM32 ↔ ESP32 UART telemetry |  Working |
+| ESP32 Wi-Fi HTTP upload |  Working |
+| Python backend REST API |  Working |
+| Leaflet.js map dashboard |  Working |
+| BLE RC vehicle control |  Working |
+| 3D-printed sensor mount |  Designed & printed |
+| Bare-metal reference firmware |  Complete |
 
 ---
 
 <div align="center">
-
-Made with ❤️ · STM32 × ESP32 × Python × Leaflet.js
 
 </div>
